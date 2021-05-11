@@ -58,37 +58,28 @@
         <el-button type="primary" v-else :loading="isLoading"
           >Cargando...</el-button
         >
+        <el-button type="primary" @click="exportCSV($event)">exportar</el-button>
         <el-button type="primary" @click="createDialogVisible = true"
           >{{ $t('new-register') }}</el-button
         >
       </div>
 
       <!-- Datatable show the Registers -->
-      <el-table
+      <DataTable ref="dt"
         v-if="isLoading || hasRegisters"
         v-loading="isLoading"
-        :default-sort="{ prop: 'id', order: 'ascending' }"
-        stripe
-        align="center" 
-        fit
-        :data="
-          registers.filter(
-            (register) =>
-              !search ||
-              register.value.toLowerCase().includes(search.toLowerCase())
-          )
-        "
+        :value="registers"
         style="width: 100%"
         max-height="600"
       >
         <!-- Colum ID -->
-        <el-table-column align="center" label="Código" prop="id" sortable></el-table-column>
+        <Column  align="center" header="Código" field="id" sortable></column>
 
         <!-- Dinamic columns -->
-        <el-table-column
+        <Column
           v-for="field in fillableFields"
           :key="field.id"
-          :label="field.value"
+          :header="field.value"
           sortable
           align="center" 
         >
@@ -97,18 +88,13 @@
               {{ getColumnValue(scope.row, field) }}
             </span>
           </template>
-        </el-table-column>
+        </Column>
         <!-- Colum Value -->
-        <el-table-column label="Valor" prop="value" sortable align="center" ></el-table-column>
+        <Column header="Valor" field="value" sortable align="center" ></Column>
 
         <!-- Colum Actions , search, update, delete -->
-        <el-table-column align="right" min-width="150">
+        <Column align="right" min-width="150">
           <template #header>
-            <el-input
-              v-model="search"
-              size="mini"
-              :placeholder="$t('search-by-value')"
-            />
           </template>
           <template #default="scope">
             <el-button
@@ -133,10 +119,10 @@
               </template>
             </el-popconfirm>
           </template>
-        </el-table-column>
+        </Column>
         <!-- END Colum Actions , search, update, delete -->
 
-      </el-table>
+      </DataTable>
       <!-- End Datatable show the Registers -->
       <el-empty
         v-else
@@ -183,6 +169,12 @@ export default {
     },
   },
   methods: {
+
+
+    exportCSV() {
+            this.$refs.dt.exportCSV();
+        },
+
     /* Load Registers in datatable */
     async loadRegisters(refresh = false) {
       this.isLoading = true;
