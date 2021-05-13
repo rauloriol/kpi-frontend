@@ -1,4 +1,4 @@
-# Gestion de Indicadores (KPIs)
+# Gestion de valores de Indicadores (KPIs)
 
 ## Project setup
 ```
