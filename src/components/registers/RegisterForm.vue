@@ -59,7 +59,7 @@
           },
         ]"
       >
-        <el-input v-model="form.value"></el-input>
+        <el-input v-model="form.value" role="input-field-value"></el-input>
       </el-form-item>
 
       <!-- Form submit / cancel -->
@@ -67,7 +67,7 @@
         <el-button type="primary" @click="submitForm">
           {{ submitText }}
         </el-button>
-        <el-button @click="$emit('close-modal')">Cancelar</el-button>
+        <el-button @click="cancelForm">{{$t('cancel')}}</el-button>
       </el-form-item>
 
     </el-form>
@@ -160,6 +160,13 @@ export default {
           return false;
         }
       });
+    },cancelForm(){
+      this.$emit("close-modal");
+      // Reset form
+      for (const column of this.form.columns) {
+            column.value_label = '';
+          }
+          this.form.value = '';
     },
     /* Rules for input registers */
     getFieldRules() {
